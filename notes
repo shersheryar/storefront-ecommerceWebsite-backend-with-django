@@ -1,0 +1,2 @@
+migrationInDjango: use migrations to create or update database tables base on models that we have created in our project.
+commad => python manage.py makemigrations
