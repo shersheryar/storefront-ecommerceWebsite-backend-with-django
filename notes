@@ -1,6 +1,15 @@
 migrationInDjango: use migrations to create or update database tables base on models that we have created in our project.
 commad => python manage.py makemigrations.
-to make database scheme run python manage.py migrate 
+to make database scheme run python manage.py migrate
 
 to connect django project with mysql we need to download a pakage call mysqlcliend..
 pipenv install mysqlclient
+
+orm=> object relational mappers -> maps objects to relational records
+we dont have to code in sql.. we can code in python.
+collection, product , customer, order, order item
+
+# objects perform as an interface to the database
+
+    # help to interact with the database without writing SQL queries directly to the database
+    <!-- #  ORM (Object Relational Mapping) is a programming technique that allows developers to interact with a relational database using an object-oriented programming language. -->
