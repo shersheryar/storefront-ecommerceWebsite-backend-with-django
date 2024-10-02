@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Q, F
 from store.models import Customer
 # Create your views here.
 
@@ -28,8 +28,16 @@ def say_hello(request):
 
     # here using Q object to perform complex filtering
     #  here ~ is used for not
-    customers = Customer.objects.filter(
-        Q(id__gt=2) & ~Q(first_name__startswith='A'))
+    # customers = Customer.objects.filter(
+    #     Q(id__gt=2) & ~Q(first_name__startswith='A'))
+
+    # here using F object for Referencing the value of a field in another field
+    # customers = Customer.objects.filter(first_name__startswith=F('last_name'))
+
+    # sorting data in ascending order
+    customers = Customer.objects.order_by('-first_name')
+    # customers = Customer.objects.earliest('-first_name')
+    # customers = Customer.objects.latest('-first_name')
 
     print(list(customers))
     # query_set = Customer.objects.all()
