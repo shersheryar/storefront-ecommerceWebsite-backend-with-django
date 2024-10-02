@@ -35,10 +35,12 @@ def say_hello(request):
     # customers = Customer.objects.filter(first_name__startswith=F('last_name'))
 
     # sorting data in ascending order
-    customers = Customer.objects.order_by('-first_name')
+    # customers = Customer.objects.order_by('-first_name')
     # customers = Customer.objects.earliest('-first_name')
     # customers = Customer.objects.latest('-first_name')
 
+    # limiting the number of records
+    customers = Customer.objects.all()[2:10]
     print(list(customers))
     # query_set = Customer.objects.all()
     # for x in query_set:
