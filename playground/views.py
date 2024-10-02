@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from store.models import Customer
 # Create your views here.
 
@@ -22,8 +23,14 @@ def say_hello(request):
     # customers = Customer.objects.filter(id__range=(1, 3))
 
     # complex filtering
+    # customers = Customer.objects.filter(
+    #     id__gt=2).filter(first_name__startswith='A')
+
+    # here using Q object to perform complex filtering
+    #  here ~ is used for not
     customers = Customer.objects.filter(
-        id__gt=2).filter(first_name__startswith='A')
+        Q(id__gt=2) & ~Q(first_name__startswith='A'))
+
     print(list(customers))
     # query_set = Customer.objects.all()
     # for x in query_set:
