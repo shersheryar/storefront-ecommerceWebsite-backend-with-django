@@ -57,6 +57,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    # reverse relations with orderitem = orderitem_set
 
 
 class OrderItem(models.Model):
