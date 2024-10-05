@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F
+from django.db.models.aggregates import Count, Sum, Avg, Min, Max
 from store.models import Customer, Order
 # Create your views here.
 
@@ -55,10 +56,14 @@ def say_hello(request):
     # this is used to pre load the many to many fields
     # product = Product.objects.prefetch_related('promotions').all()
 
-    order = Order.objects.select_related(
-        'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[0:5]
+    # excercise
+    # order = Order.objects.select_related(
+    #     'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[0:5]
 
-    print(list(customers))
+    #  Aggrigate methods like Count, Sum, Avg, Min, Max
+    customers = Customer.objects.aggregate(count=Count('id'))
+
+    print(customers)
     # query_set = Customer.objects.all()
     # for x in query_set:
     #     print(x.first_name)
