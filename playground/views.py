@@ -96,6 +96,8 @@ def say_hello(request):
         object_id=1
     )
 
+    TaggedItem.objects.get_tags_for(Product, 1)
+
     # for x in query_set:
     #     print(x.first_name)
     return render(request, "hello.html", {'customers': list(customers)})
