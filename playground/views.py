@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F
+from django.db.models import Q, F, Func
+from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Sum, Avg, Min, Max
+from django.db.models import Value
 from store.models import Customer, Order
 # Create your views here.
 
@@ -63,9 +65,16 @@ def say_hello(request):
     #  Aggrigate methods like Count, Sum, Avg, Min, Max
     customers = Customer.objects.aggregate(count=Count('id'))
 
-    print(customers)
+    # annotate fucntion
+    # querylist = Customer.objects.annotate(new_id=F('Id'))
+    querylist = Customer.objects.annotate(fullname=Func(
+        F('first_name'), F('last_name'), Value(' '), function='CONCAT'))
+
+    querylist = Customer.objects.annotate(fullname=Concat(
+        'first_name', Value(' '), 'last_name'))
+    # print('helooo', list(querylist))
     # query_set = Customer.objects.all()
     # for x in query_set:
     #     print(x.first_name)
-    return render(request, "hello.html", {'customers': list(customers)})
+    return render(request, "hello.html", {'customers': list(customers), 'result': list(querylist)})
 # this return all the fields except id and first_name
