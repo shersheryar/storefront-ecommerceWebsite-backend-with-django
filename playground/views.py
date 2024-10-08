@@ -1,11 +1,12 @@
+from django.forms import DecimalField
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F, Func
+from django.db.models import Q, F, Func, ExpressionWrapper
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Sum, Avg, Min, Max
 from django.db.models import Value
-from store.models import Customer, Order
+from store.models import Customer, Order, Product
 # Create your views here.
 
 
@@ -65,16 +66,26 @@ def say_hello(request):
     #  Aggrigate methods like Count, Sum, Avg, Min, Max
     customers = Customer.objects.aggregate(count=Count('id'))
 
-    # annotate fucntion
+    # --------------annotate fucntion is used to add new field to the query set ---------------------
     # querylist = Customer.objects.annotate(new_id=F('Id'))
-    querylist = Customer.objects.annotate(fullname=Func(
-        F('first_name'), F('last_name'), Value(' '), function='CONCAT'))
+    # querylist = Customer.objects.annotate(fullname=Func(
+    #     F('first_name'), F('last_name'), Value(' '), function='CONCAT'))
 
-    querylist = Customer.objects.annotate(fullname=Concat(
-        'first_name', Value(' '), 'last_name'))
+    # querylist = Customer.objects.annotate(fullname=Concat(
+    #     'first_name', Value(' '), 'last_name'))
     # print('helooo', list(querylist))
     # query_set = Customer.objects.all()
+
+    # ----------- grouping data - ------------------
+    # querylist = Customer.objects.annotate(order_count=Count('order'))
+
+    # --------------expression wrapper ----------------
+    discounted_price = ExpressionWrapper(
+        F('price') * 0.8, output_field=DecimalField()
+    )
+    querylist = Product.objects.annotate(
+        discounted_price=discounted_price)
     # for x in query_set:
     #     print(x.first_name)
-    return render(request, "hello.html", {'customers': list(customers), 'result': list(querylist)})
+    return render(request, "hello.html", {'customers': list(customers)})
 # this return all the fields except id and first_name
