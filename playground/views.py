@@ -7,7 +7,7 @@ from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Sum, Avg, Min, Max
 from django.db.models import Value
 from django.contrib.contenttypes.models import ContentType
-from store.models import Customer, Order, Product
+from store.models import Collection, Customer, Order, Product
 from tags.models import TaggedItem
 # Create your views here.
 
@@ -89,14 +89,24 @@ def say_hello(request):
     #  discounted_price=discounted_price)
 
     # ------ Qerying the generic relations ---------------
-    content_type = ContentType.objects.get_for_model(Product)
+    # content_type = ContentType.objects.get_for_model(Product)
 
-    TaggedItem.objects.select_related('tag').filter(
-        content_type=content_type,
-        object_id=1
-    )
+    # TaggedItem.objects.select_related('tag').filter(
+    #     content_type=content_type,
+    #     object_id=1
+    # )
 
-    TaggedItem.objects.get_tags_for(Product, 1)
+    # TaggedItem.objects.get_tags_for(Product, 1)
+
+    # --------------- Creating objects -------------------------
+    collection = Collection()
+    collection.title = "Video Games"
+    collection.featured_product = Product(pk=1)
+    collection.save()
+
+    # -------------second approach--------------------------
+    collection = Collection.objects.create(
+        title="Video Games", featured_product=Product(pk=1))
 
     # for x in query_set:
     #     print(x.first_name)
