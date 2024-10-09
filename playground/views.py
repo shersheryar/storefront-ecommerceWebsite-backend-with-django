@@ -1,13 +1,14 @@
 from django.forms import DecimalField
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Func, ExpressionWrapper
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Sum, Avg, Min, Max
 from django.db.models import Value
 from django.contrib.contenttypes.models import ContentType
-from store.models import Collection, Customer, Order, Product
+from store.models import Collection, Customer, Order, OrderItem, Product
 from tags.models import TaggedItem
 # Create your views here.
 
@@ -99,28 +100,52 @@ def say_hello(request):
     # TaggedItem.objects.get_tags_for(Product, 1)
 
     # --------------- Creating objects -------------------------
-    try:
-        collection = Collection()
-        collection.title = "Video Games"
-        collection.featured_product = Product(pk=1)
-        collection.save()
-    except:
-        print("error")
+    # try:
+    #     collection = Collection()
+    #     collection.title = "Video Games"
+    #     collection.featured_product = Product(pk=1)
+    #     collection.save()
+    # except:
+    #     print("error")
+
+    # -------------second approach--------------------------
+    # collection = Collection.objects.create(
+    #     title="Video Games", featured_product=Product(pk=1))
 
     # -----------------update objects-------------------------
     # here if we want to update the object we need to get the object first
     # because if we try to update the object without getting the object first it will also update the the field
     # which we have not updated and it will set to null or default value if we have set any default value to that field
-    collection = Collection.objects.get(pk=1)
-    collection.featured_product = None
-    collection.save()
+    # collection = Collection.objects.get(pk=1)
+    # collection.featured_product = None
+    # collection.save()
 
     # --------------second approach--------------------------
     # Collection.objects.filter(pk=11).update(featured_product=None)
 
-    # -------------second approach--------------------------
-    # collection = Collection.objects.create(
-    #     title="Video Games", featured_product=Product(pk=1))
+    # ------------------- Delete Object -------------------------
+    # if you want to delete single object
+    # collection = Collection()
+    # collection.delete()
+
+    # if you want to delete multiple objects
+    # Collection.objects.filter(id__gt=5).delete()
+
+    # ------------ transactions----------------------------
+    # transaction are use when you want to run some code that has to run whole
+    #  because if somethings happens that it can cause error.. or other problems in code
+    # or if something unexpected happens then our database will be in consistent state
+    # with transaction.atomic():
+    #     order = Order()
+    #     order.customer_id = 1
+    #     order.save()
+
+    #     item = OrderItem()
+    #     item.order = order
+    #     item.product_id = 1
+    #     item.quantity = 1
+    #     item.unit_price = 11
+    #     order.save()
 
     # for x in query_set:
     #     print(x.first_name)
