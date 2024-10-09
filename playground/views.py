@@ -1,7 +1,7 @@
 from django.forms import DecimalField
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db import transaction
+from django.db import transaction, connection
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Func, ExpressionWrapper
 from django.db.models.functions import Concat
@@ -146,6 +146,12 @@ def say_hello(request):
     #     item.quantity = 1
     #     item.unit_price = 11
     #     order.save()
+
+    # -----------------------raw queries---------------------------
+    queryset = Product.objects.raw("Select * from store_product")
+    # ---second approach-------
+    with connection.cursor() as cursor:
+        cursor.execute()
 
     # for x in query_set:
     #     print(x.first_name)
