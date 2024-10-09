@@ -99,14 +99,28 @@ def say_hello(request):
     # TaggedItem.objects.get_tags_for(Product, 1)
 
     # --------------- Creating objects -------------------------
-    collection = Collection()
-    collection.title = "Video Games"
-    collection.featured_product = Product(pk=1)
+    try:
+        collection = Collection()
+        collection.title = "Video Games"
+        collection.featured_product = Product(pk=1)
+        collection.save()
+    except:
+        print("error")
+
+    # -----------------update objects-------------------------
+    # here if we want to update the object we need to get the object first
+    # because if we try to update the object without getting the object first it will also update the the field
+    # which we have not updated and it will set to null or default value if we have set any default value to that field
+    collection = Collection.objects.get(pk=1)
+    collection.featured_product = None
     collection.save()
 
+    # --------------second approach--------------------------
+    # Collection.objects.filter(pk=11).update(featured_product=None)
+
     # -------------second approach--------------------------
-    collection = Collection.objects.create(
-        title="Video Games", featured_product=Product(pk=1))
+    # collection = Collection.objects.create(
+    #     title="Video Games", featured_product=Product(pk=1))
 
     # for x in query_set:
     #     print(x.first_name)
