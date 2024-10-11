@@ -5,11 +5,15 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'price', 'inventory_status']
+    list_display = ['title', 'price', 'inventory_status', 'collection_title']
     list_editable = ['price']
     list_per_page = 10
     search_fields = ['title', 'description']
     list_filter = ['last_update', 'collection']
+    list_select_related = ['collection']
+
+    def collection_title(self, product):
+        return product.collection.title
 
     @admin.display(ordering='inventory')
     def inventory_status(self, product):
@@ -27,6 +31,14 @@ class CustomerAdmin(admin.ModelAdmin):
     list_filter = ['first_name', 'membership']
     ordering = ['first_name', 'last_name']
 
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'placed_at', 'customer']
+
+    # def customer_name(self, order):
+    #     return
+/
 
 # second approach to register the model
 # admin.site.register(models.Collection)
