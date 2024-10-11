@@ -7,6 +7,9 @@ class Promotion(models.Model):
     description = models.CharField(max_length=255)
     discount = models.FloatField()
 
+    def __str__(self) -> str:
+        return self.description
+
 
 class Collection(models.Model):
     title = models.CharField(max_length=255)

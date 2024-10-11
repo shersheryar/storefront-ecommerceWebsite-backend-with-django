@@ -5,11 +5,18 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'price']
+    list_display = ['title', 'price', 'inventory_status']
     list_editable = ['price']
     list_per_page = 10
     search_fields = ['title', 'description']
     list_filter = ['last_update', 'collection']
+
+    @admin.display(ordering='inventory')
+    def inventory_status(self, product):
+        if product.inventory < 10:
+            return 'Low'
+        else:
+            return 'Ok'
 
 
 @admin.register(models.Customer)
@@ -30,4 +37,4 @@ class CustomerAdmin(admin.ModelAdmin):
 # admin.site.register(models.OrderItem)
 # admin.site.register(models.TaggedItem)
 # admin.site.register(models.ProductTag)
-# admin.site.register(models.Tag)
+admin.site.register(models.Promotion)
