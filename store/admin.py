@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.db.models.aggregates import Count
+from django.http import HttpRequest
 from . import models
 # Register your models here.
 
@@ -38,15 +41,29 @@ class OrderAdmin(admin.ModelAdmin):
 
     # def customer_name(self, order):
     #     return
-/
 
-# second approach to register the model
-# admin.site.register(models.Collection)
-# admin.site.register(models.Product, ProductAdmin)
-# admin.site.register(models.Customer)
-# admin.site.register(models.Promotion)
-# admin.site.register(models.Order)
-# admin.site.register(models.OrderItem)
-# admin.site.register(models.TaggedItem)
-# admin.site.register(models.ProductTag)
+
+@admin.register(models.Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    list_display = ['title', 'products_count']
+
+    @admin.display(ordering='products_count')
+    def products_count(self, collection):
+        return collection.products_count
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
+        return super().get_queryset(request).annotate(
+            products_count=Count('product')
+        )
+
+
+    # second approach to register the model
+    # admin.site.register(models.Collection)
+    # admin.site.register(models.Product, ProductAdmin)
+    # admin.site.register(models.Customer)
+    # admin.site.register(models.Promotion)
+    # admin.site.register(models.Order)
+    # admin.site.register(models.OrderItem)
+    # admin.site.register(models.TaggedItem)
+    # admin.site.register(models.ProductTag)
 admin.site.register(models.Promotion)
